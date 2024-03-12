@@ -8,7 +8,7 @@ public class Button
 
     public Rectangle Rect { get; set; }
     public bool Is_Rounded { get; set; }
-
+    public string FunctionID  { get; set; }
     public ImageExtened? ButtonImage { get; set; }
     public Color Color { get; set; }
     private Color baseColor;
@@ -18,7 +18,7 @@ public class Button
     public float Roundness { get; set; }
     public TextLabel? TextLabel;
 
-    public Button(Vector2 pos, int width, int height, Color color, bool rounded, float roundness)
+    public Button(Vector2 pos, int width, int height, Color color, bool rounded, float roundness,string functionID)
     {
         Vector2 sizeVector = new Vector2(width, height);
         Width = width;
@@ -28,9 +28,11 @@ public class Button
         Is_Rounded = rounded;
         Roundness = roundness;
         baseColor = Color;
+        FunctionID = functionID;
+        //selfAction += 
     }
 
-    public Button(Vector2 pos, int width, int height, Color color, bool rounded, float roundness, ImageExtened image)
+    public Button(Vector2 pos, int width, int height, Color color, bool rounded, float roundness, ImageExtened image,string functionID)
     {
         Vector2 sizeVector = new Vector2(width, height);
         Width = width;
@@ -41,10 +43,11 @@ public class Button
         Roundness = roundness;
         ButtonImage = image;
         baseColor = Color;
+        FunctionID = functionID;
 
     }
 
-    public Button(Vector2 pos, int width, int height, Color color, bool rounded, float roundness, TextLabel textLabel)
+    public Button(Vector2 pos, int width, int height, Color color, bool rounded, float roundness, TextLabel textLabel,string functionID)
     {
         Vector2 sizeVector = new Vector2(width, height);
         Width = width;
@@ -55,9 +58,10 @@ public class Button
         Roundness = roundness;
         TextLabel = textLabel;
         baseColor = Color;
+        FunctionID = functionID;
     }
 
-    public Button(Vector2 pos, int width, int height, Color color, bool rounded, float roundness, TextLabel textLabel, ImageExtened image)
+    public Button(Vector2 pos, int width, int height, Color color, bool rounded, float roundness, TextLabel textLabel, ImageExtened image,string functionID)
     {
         Vector2 sizeVector = new Vector2(width, height);
         Width = width;
@@ -69,37 +73,36 @@ public class Button
         TextLabel = textLabel;
         ButtonImage = image;
         baseColor = Color;
+        FunctionID = functionID;
     }
 
 
-    public void DetectInput()
+    public bool DetectInput()
     {
         Vector2 mousePos = GetMousePosition();
         if (CheckCollisionPointRec(mousePos, Rect))
         {
 
-            Console.WriteLine("Detected: " + TextLabel?.Label + " inside");
+            //Console.WriteLine("Detected: " + TextLabel?.Label + " inside");
             Color = ColorAlpha(Color, 0.01f);
 
             if (IsMouseButtonPressed(MouseButton.Left))
             {
-                Console.WriteLine("Clicked inside " + TextLabel?.Label);
+                //Console.WriteLine("Clicked inside " + TextLabel?.Label);
+                return true;
             }
         }
         else
         {
             Color = baseColor;
         }
-        //     mp = GetMousePosition();
-        // pos = { GetMousePosition().x,GetMousePosition().y };
 
-
-        // 	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointCircle(pos,RedBall.Pos,RedBall.Radius))
-        // 	{
-        // 		Player.Current_Game_Score++;
-        // 	}
+        return false;
     }
 
+    public object Called(){
+         return this;
+    }
     // public void SetTexture(Texture2D texture)
     // {Vector2 textPosition,int font_size,Color text_color
     //     Texture2D = texture;
