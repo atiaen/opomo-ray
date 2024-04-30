@@ -48,14 +48,15 @@ public class DBHandler
             start_date varchar,
             end_date varchar,
             created_date varchar,
-            project_id varchar nullable
+            project_id varchar,
+            FOREIGN KEY(project_id) REFERENCES projects(id)
         )
         ";
-        string alterTable = @"
-            ALTER TABLE tasks
-            ADD FOREIGN KEY (project_id) 
-            REFERENCES projects (id);
-        ";
+        // string alterTable = @"
+        //     ALTER TABLE tasks
+        //     ADD FOREIGN KEY (project_id) 
+        //     REFERENCES projects (id);
+        // ";
         sqlite_cmd = sqlite_conn.CreateCommand();
 
         sqlite_cmd.CommandText = Createsql;
@@ -64,8 +65,8 @@ public class DBHandler
         sqlite_cmd.CommandText = Createsql1;
         sqlite_cmd.ExecuteNonQuery();
 
-        sqlite_cmd.CommandText = alterTable;
-        sqlite_cmd.ExecuteNonQuery();
+        // sqlite_cmd.CommandText = alterTable;
+        // sqlite_cmd.ExecuteNonQuery();
 
     }
 

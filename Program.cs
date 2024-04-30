@@ -69,8 +69,6 @@ class Program
 
         DBHandler handler = new DBHandler();
         handler.CreateInitalTables();
-        
-        List<Tasks> tasksList = handler.ReadFromTasks();
 
         var screenWidthIn3 = GetScreenWidth() / 3;
 
@@ -127,13 +125,13 @@ class Program
                 {
                     ImGui.SetColumnWidth(0, screenWidthIn3); // Set width of first column
 
-                    if (ImGui.Button("New Task " + IconFonts.FontAwesome6.Plus))
+                    if (ImGui.Button("New Task " + FontAwesome6.Plus))
                     {
                         ImGui.OpenPopup("New Task");
                         // endAngle += 10;
                     }
                     ImGui.SameLine(100);
-                    if (ImGui.Button("New Project " + IconFonts.FontAwesome6.Plus))
+                    if (ImGui.Button("New Project " + FontAwesome6.Plus))
                     {
                         ImGui.OpenPopup("New Project");
                         // endAngle -= 10;
@@ -141,7 +139,7 @@ class Program
 
                     ImGui.Dummy(new Vector2(0, 20));
 
-                    ImGui.Text("History " + IconFonts.FontAwesome6.Eye);
+                    ImGui.Text("History " + FontAwesome6.Eye);
 
                     ImGui.Dummy(new Vector2(0, 15));
 
@@ -227,7 +225,7 @@ class Program
                         ImGui.NextColumn();
                         ImGui.SetColumnWidth(1, screenWidthIn3 * 0.5f);
                         ImGui.SetCursorPosX(screenWidthIn3 - 50f); // Adjust position for top-right section
-                        ImGui.Button(IconFonts.FontAwesome6.Ellipsis);
+                        ImGui.Button(FontAwesome6.Ellipsis);
                         ImGui.Columns(1);
 
 
@@ -277,7 +275,7 @@ class Program
                                               ImGui.NextColumn();
                                               ImGui.SetColumnWidth(1, screenWidthIn3 * 0.5f);
                                               ImGui.SetCursorPosX(screenWidthIn3 - 50f); // Adjust position for top-right section
-                                              ImGui.Button(IconFonts.FontAwesome6.Ellipsis);
+                                              ImGui.Button(FontAwesome6.Ellipsis);
                                               ImGui.Columns(1);
 
 
