@@ -92,7 +92,7 @@ public class DBHandler
 
             projects.Add(project);
         }
-        sqlite_conn.Close();
+        //sqlite_conn.Close();
 
 
         return projects;
@@ -100,33 +100,78 @@ public class DBHandler
 
     public List<Tasks> ReadFromTasks()
     {
-        List<Tasks> tasks = new List<Tasks>();
+       try
+       {
+         List<Tasks> tasks = new List<Tasks>();
         SQLiteDataReader sqlite_datareader;
         SQLiteCommand sqlite_cmd;
         sqlite_cmd = sqlite_conn.CreateCommand();
-        sqlite_cmd.CommandText = "SELECT * FROM tasks";
+        sqlite_cmd.CommandText = "SELECT * FROM tasks ORDER BY created_date ASC";
 
         sqlite_datareader = sqlite_cmd.ExecuteReader();
         while (sqlite_datareader.Read())
         {
             Tasks task = new Tasks()
             {
-                TaskId = sqlite_datareader.GetGuid(0),
+                TaskId = new Guid(sqlite_datareader.GetString(0)),
                 TaskName = sqlite_datareader.GetString(1),
                 TaskDesc = sqlite_datareader.GetString(2),
                 BreakType = sqlite_datareader.GetString(3),
-                StartDate = sqlite_datareader.GetDateTime(4),
-                EndDate = sqlite_datareader.GetDateTime(5),
-                CreatedDate = sqlite_datareader.GetDateTime(6),
-                ProjectId = sqlite_datareader.GetGuid(7),
+                IsCompleted = sqlite_datareader.GetBoolean(4),
+                StartDate = DateTime.Parse(sqlite_datareader.GetString(5)),
+                EndDate = DateTime.Parse(sqlite_datareader.GetString(6)),
+                CreatedDate = new DateTime(long.Parse(sqlite_datareader.GetString(7))),
+                ProjectId =  sqlite_datareader.GetValue(8).GetType() != typeof(DBNull) ? new Guid(sqlite_datareader.GetString(8)):null,
             };
 
             tasks.Add(task);
         }
-        sqlite_conn.Close();
-
 
         return tasks;
+       }
+       catch (Exception e)
+       {
+        Console.WriteLine(e.Message + " " + e.StackTrace);
+        throw;
+       }
+    }
+
+ public List<Tasks> GetCompletedTasksByVal(bool value)
+    {
+       try
+       {
+         List<Tasks> tasks = new List<Tasks>();
+        SQLiteDataReader sqlite_datareader;
+        SQLiteCommand sqlite_cmd;
+        sqlite_cmd = sqlite_conn.CreateCommand();
+        sqlite_cmd.CommandText = $"SELECT * FROM tasks WHERE is_completed = {value} ORDER BY created_date DESC";
+
+        sqlite_datareader = sqlite_cmd.ExecuteReader();
+        while (sqlite_datareader.Read())
+        {
+            Tasks task = new Tasks()
+            {
+                TaskId = new Guid(sqlite_datareader.GetString(0)),
+                TaskName = sqlite_datareader.GetString(1),
+                TaskDesc = sqlite_datareader.GetString(2),
+                BreakType = sqlite_datareader.GetString(3),
+                IsCompleted = sqlite_datareader.GetBoolean(4),
+                StartDate = DateTime.Parse(sqlite_datareader.GetString(5)),
+                EndDate = DateTime.Parse(sqlite_datareader.GetString(6)),
+                CreatedDate = new DateTime(long.Parse(sqlite_datareader.GetString(7))),
+                ProjectId =  sqlite_datareader.GetValue(8).GetType() != typeof(DBNull) ? new Guid(sqlite_datareader.GetString(8)):null,
+            };
+
+            tasks.Add(task);
+        }
+
+        return tasks;
+       }
+       catch (Exception e)
+       {
+        Console.WriteLine(e.Message + " " + e.StackTrace);
+        throw;
+       }
     }
 
     public int CreateProject(Project project)
@@ -153,20 +198,34 @@ public class DBHandler
     {
         SQLiteCommand sqlite_cmd;
         sqlite_cmd = sqlite_conn.CreateCommand();
-
-        sqlite_cmd.CommandText =
-       string.Format(@"
+/**
+   id VARCHAR PRIMARY KEY,
+            name varchar,
+            description varchar,
+            break_type varchar,
+            is_completed boolean,
+            start_date varchar,
+            end_date varchar,
+            created_date varchar,
+            project_id varchar,
+*/
+        var q =  string.Format(@"
         INSERT INTO tasks VALUES 
-         ({0},{1},{2},{3},{4},{5},{6},{7});"
+         ('{0}', '{1}' , '{2}' , '{3}' , {4},'{5}','{6}','{7}',{8})"
         , tasks.TaskId.ToString(),
         tasks.TaskName,
         tasks.TaskDesc,
         tasks.BreakType,
+        tasks.IsCompleted,
         tasks.StartDate.ToLongDateString(),
         tasks.EndDate.ToLongDateString(),
-        tasks.CreatedDate.ToLongDateString(),
-        tasks.ProjectId.ToString()
+        tasks.CreatedDate.Ticks.ToString(),
+        tasks.ProjectId != null ? tasks.ProjectId.ToString() : "NULL"
         );
+        sqlite_cmd.CommandText = q;
+      
+
+        // Console.WriteLine(q);
 
         var res = sqlite_cmd.ExecuteNonQuery();
         return res;
@@ -192,8 +251,13 @@ public class DBHandler
             p.CreatedDate = sqlite_datareader.GetDateTime(4);
 
         }
-        sqlite_conn.Close();
+        //        sqlite_conn.Close();
 
         return p;
     }
+
+    public void CloseConnection(){
+        sqlite_conn.Close();
+    }
+
 }
