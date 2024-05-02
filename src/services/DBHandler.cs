@@ -106,7 +106,7 @@ public class DBHandler
         SQLiteDataReader sqlite_datareader;
         SQLiteCommand sqlite_cmd;
         sqlite_cmd = sqlite_conn.CreateCommand();
-        sqlite_cmd.CommandText = "SELECT * FROM tasks ORDER BY created_date ASC";
+        sqlite_cmd.CommandText = "SELECT * FROM tasks ORDER BY created_date DESC";
 
         sqlite_datareader = sqlite_cmd.ExecuteReader();
         while (sqlite_datareader.Read())
