@@ -49,6 +49,9 @@ jobs:
         body: |
           First ever release of opomo
 
+    - name: Debug - List Release Artifacts
+      run: ls -R ./bin/Release
+
     - name: Upload release assets
       id: upload-release-assets
       uses: actions/upload-release-asset@latest
