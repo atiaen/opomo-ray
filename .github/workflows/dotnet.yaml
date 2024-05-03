@@ -44,10 +44,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       with:
-        tag_name: v1.0.0  # Adjust tag name as needed
-        release_name: Release 1.0.0  # Adjust release name as needed
+        tag_name: v0.1  # Adjust tag name as needed
+        release_name: Release 0.1  # Adjust release name as needed
         body: |
-          Release notes for version 1.0.0
+          First ever release of opomo
 
     - name: Upload release assets
       id: upload-release-assets
