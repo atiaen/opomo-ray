@@ -37,7 +37,11 @@ jobs:
       with:
         name: Release
         path: ./publish
+    
+    - name: Debug - List Release Artifacts
+      run: ls -R /publish/*
 
+    
     # - name: Create release
     #   id: create_release
     #   uses: actions/create-release@latest
@@ -49,16 +53,15 @@ jobs:
     #     body: |
     #       Release notes for version 0.0.1
 
-    - name: Debug - List Release Artifacts
-      run: ls -R ./publish/*
 
-    # - name: Upload release assets
-    #   id: upload-release-assets
-    #   uses: actions/upload-release-asset@latest
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.TOKEN }}
-    #   with:
-    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-    #     asset_path: ./publish/*
-    #     asset_name: Opomo-win-x64.zip  # Adjust asset name as needed
-    #     asset_content_type: application/zip
+
+    - name: Upload release assets
+      id: upload-release-assets
+      uses: actions/upload-release-asset@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      with:
+        upload_url: https://uploads.github.com/repos/atiaen/opomo-ray/releases/154163448/assets{?name,label}
+        asset_path: /publish/*
+        asset_name: Opomo-win-x64.zip  # Adjust asset name as needed
+        asset_content_type: application/zip
