@@ -49,13 +49,16 @@ jobs:
         body: |
           Release notes for version 0.0.1
 
-    - name: Upload release assets
-      id: upload-release-assets
-      uses: actions/upload-release-asset@latest
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./publish/*
-        asset_name: Opomo-win-x64.zip  # Adjust asset name as needed
-        asset_content_type: application/zip
+    - name: Debug - List Release Artifacts
+      run: ls -R ./publish/*
+
+    # - name: Upload release assets
+    #   id: upload-release-assets
+    #   uses: actions/upload-release-asset@latest
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.TOKEN }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #     asset_path: ./publish/*
+    #     asset_name: Opomo-win-x64.zip  # Adjust asset name as needed
+    #     asset_content_type: application/zip
