@@ -32,6 +32,8 @@ public class App
     Image top = LoadImage("resources/" + "Vector.png");
     Texture2D topTexture;
 
+    // Image icon = LoadImage("icon.png");
+
     int screenWidthIn3;
 
     Vector2 center;
@@ -54,6 +56,9 @@ public class App
     public static string project_title = "Enter a Project Title";
 
     static int selectedIndex = 0;
+    int clicked = 0;
+
+    string clickedId = "";
 
     public DBHandler handler = new DBHandler();
 
@@ -91,6 +96,7 @@ public class App
         UnloadImage(pause);
         UnloadImage(stop);
         UnloadImage(top);
+        // UnloadImage(icon);
 
     }
 
@@ -98,6 +104,8 @@ public class App
     {
 
         InitWindow(800, 650, "Opomo");
+        // SetWindowState(ConfigFlags.ResizableWindow);
+        SetWindowIcon(top);
         SetTargetFPS(60);
         LoadTextures();
 
@@ -135,7 +143,7 @@ public class App
                 ImGui.Columns(3);
 
 
-
+                RenderOptionsPopup();
                 RenderProjectModal();
                 RenderTaskModal();
             }
@@ -196,13 +204,11 @@ public class App
         if (ImGui.Button("New Task " + FontAwesome6.Plus))
         {
             ImGui.OpenPopup("New Task");
-            // endAngle += 10;
         }
         ImGui.SameLine(100);
         if (ImGui.Button("New Project " + FontAwesome6.Plus))
         {
             ImGui.OpenPopup("New Project");
-            // endAngle -= 10;
         }
 
         ImGui.Dummy(new Vector2(0, 20));
@@ -230,7 +236,7 @@ public class App
         }
         else
         {
-            ImGui.Text($"You haven't completed any tasks yet 🙁");
+            ImGui.Text($"No tasks completed yet ");
         }
 
 
@@ -267,7 +273,7 @@ public class App
         rlImGui.ImageButton("stop", stopTexture);
 
         ImGui.Dummy(new Vector2(0, 40));
-        ImGui.SetCursorPosX(ImGui.GetCursorPosX() + 70f);
+        ImGui.SetCursorPosX(ImGui.GetCursorPosX() + 50f);
         ImGui.Button("Mark as completed");
 
         ImGui.Dummy(new Vector2(0, 30));
@@ -299,8 +305,8 @@ public class App
                             var proj = handler.GetProject(currentTask.ProjectId.ToString());
                             Helpers.DrawCard(proj.Title, screenWidthIn3 * 0.35f, 18f, Helpers.convertToVector4(Helpers.blueColor), false, () =>
                                                      {
-                                                                         ImGui.Text(proj.Title);
-                                                                     });
+                                                         ImGui.Text(proj.Title);
+                                                     });
 
                         }
 
@@ -323,15 +329,14 @@ public class App
 
         ImGui.Dummy(new Vector2(0, 15));
 
-
         ImGuiWindowFlags window_flags = ImGuiWindowFlags.NoScrollbar;
         ImGui.BeginChild("RightScroll", new Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y), ImGuiChildFlags.None, window_flags);
         if (taskHistory.Count() > 0)
         {
+            // clickedId = taskHistory[0].TaskId.ToString();
             for (int i = 0; i < taskHistory.Count(); i++)
             {
                 var task = taskHistory[i];
-
                 Helpers.DrawCard("Card " + i, screenWidthIn3, 80f, Helpers.convertToVector4(Helpers.cardColor), false, () =>
                                   {
 
@@ -344,7 +349,14 @@ public class App
                                       ImGui.NextColumn();
                                       ImGui.SetColumnWidth(1, screenWidthIn3 * 0.5f);
                                       ImGui.SetCursorPosX(screenWidthIn3 - 50f); // Adjust position for top-right section
-                                      ImGui.Button(FontAwesome6.Ellipsis);
+                                      if (ImGui.Button(FontAwesome6.Ellipsis))
+                                      {
+                                          clickedId = task.TaskId.ToString();
+                                          clicked = i;
+                                          ImGui.OpenPopup(clickedId);
+                                          Console.WriteLine("clicked " + clickedId);
+                                          // ImGui.BeginPopupContextItem(clickedId);
+                                      }
                                       ImGui.Columns(1);
 
 
@@ -497,5 +509,24 @@ public class App
         }
 
     }
+
+    public void RenderOptionsPopup()
+    {
+        if (ImGui.BeginPopup(clicked.ToString()))
+        {
+            if (ImGui.Selectable("Set to zero"))
+            {
+
+            };
+            if (ImGui.Selectable("Set to PI"))
+            {
+
+            };
+            // ImGui::SetNextItemWidth(-FLT_MIN);
+            // ImGui::DragFloat("##Value", &value, 0.1f, 0.0f, 0.0f);
+            ImGui.EndPopup();
+        }
+    }
+
 
 }
