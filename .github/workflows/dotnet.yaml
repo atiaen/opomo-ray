@@ -38,16 +38,16 @@ jobs:
         name: Release
         path: ./publish
 
-    - name: Create release
-      id: create_release
-      uses: actions/create-release@latest
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      with:
-        tag_name: v0.0.1  # Adjust tag name as needed
-        release_name: Release 0.0.1  # Adjust release name as needed
-        body: |
-          Release notes for version 0.0.1
+    # - name: Create release
+    #   id: create_release
+    #   uses: actions/create-release@latest
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.TOKEN }}
+    #   with:
+    #     tag_name: v0.0.1  # Adjust tag name as needed
+    #     release_name: Release 0.0.1  # Adjust release name as needed
+    #     body: |
+    #       Release notes for version 0.0.1
 
     - name: Debug - List Release Artifacts
       run: ls -R ./publish/*
