@@ -1,0 +1,61 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main  # Adjust branch name as needed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up .NET Core SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'  # Adjust version as needed
+
+    - name: Restore dependencies and build
+      run: dotnet build --configuration Release
+
+    - name: Publish artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Release
+        path: ./bin/Release
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: Release
+        path: ./bin/Release
+
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      with:
+        tag_name: v1.0.0  # Adjust tag name as needed
+        release_name: Release 1.0.0  # Adjust release name as needed
+        body: |
+          Release notes for version 1.0.0
+
+    - name: Upload release assets
+      id: upload-release-assets
+      uses: actions/upload-release-asset@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./bin/Release/*
+        asset_name: MyApp.zip  # Adjust asset name as needed
+        asset_content_type: application/zip

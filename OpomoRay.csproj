@@ -5,11 +5,18 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>    
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Raylib-cs" Version="6.0.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
+    <PackageReference Include="ImGui.NET" Version="1.90.1.1" />
   </ItemGroup>
+
+  
+
 
 </Project>
