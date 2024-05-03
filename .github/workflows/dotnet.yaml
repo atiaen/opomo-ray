@@ -16,7 +16,7 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '6.0.x'  # Adjust version as needed
+        dotnet-version: '8.0.x'  # Adjust version as needed
 
     - name: Build and Publish
       run: dotnet publish -c Release -r win-x64 --self-contained true --output ./publish
